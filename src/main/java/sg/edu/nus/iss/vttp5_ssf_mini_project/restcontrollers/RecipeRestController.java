@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,23 +23,10 @@ import sg.edu.nus.iss.vttp5_ssf_mini_project.services.RecipeService;
 @RestController
 @RequestMapping("/api")
 public class RecipeRestController {
-    
+
     @Autowired
     private RecipeService recipeService;
 
-    // // Search recipes through API (returns JSON)
-    // @PostMapping("/search")
-    // public List<RecipeResult> searchRecipes(@RequestBody RecipeRequest searchRequest) {
-    //     return recipeService.searchRecipes(searchRequest);
-    // }
-
-    // Get recipe details via API (returns JSON)
-    // @GetMapping("/{id}")
-    // public Recipe getRecipeDetails(@PathVariable String id) {
-    //     return recipeService.getRecipeDetails(id);
-    // }
-
-    // testing api response --> this works
     @GetMapping("/recipe")
     public List<Recipe> getRecipes(
             @RequestParam String apiKey,
@@ -49,25 +37,20 @@ public class RecipeRestController {
             @RequestParam(required = false) Integer minServings,
             @RequestParam(required = false) Integer maxServings,
             @RequestParam(required = false) String includeIngredients,
-            @RequestParam(required = false) String excludeIngredients)
+            @RequestParam(required = false) String excludeIngredients) {
+        return recipeService.getRecipes(apiKey, query, type, cuisine, diet, minServings, maxServings, includeIngredients, excludeIngredients);
+    }
 
-            {
-                return recipeService.getRecipes(apiKey, query, type, cuisine, diet, minServings, maxServings, includeIngredients, excludeIngredients);
-            }
-
-    // Endpoint to add recipes to session
     @PostMapping("/addRecipesToSession")
     public ResponseEntity<String> addRecipesToSession(HttpSession session) {
         List<Recipe> recipes = recipeService.getRecipes(null, null, null, null, null, null, null, null, null); // Assuming this fetches recipes from a DB or API
-        session.setAttribute("listedRecipes", recipes); // Store the list in session
+        session.setAttribute("listedRecipes", recipes);
 
-    // Log the recipes added to the session
-    System.out.println("Adding " + recipes.size() + " recipes to session");
+        System.out.println("Adding " + recipes.size() + " recipes to session");
 
         return ResponseEntity.ok("Recipes added to session");
     }
 
-    // Endpoint to check if recipes are stored in session
     @GetMapping("/checkSession")
     public ResponseEntity<String> checkSession(HttpSession session) {
         List<Recipe> recipes = (List<Recipe>) session.getAttribute("listedRecipes");
@@ -77,49 +60,57 @@ public class RecipeRestController {
         return ResponseEntity.ok("Recipes in session: " + recipes.size());
     }
 
-
-
     @GetMapping("/recipe/{recipeId}")
     public ResponseEntity<String> getRecipeInJson(
-        @PathVariable Integer recipeId,  // Use Integer instead of String
-        HttpSession sess) {
-        
-        // Check if the user is logged in by verifying the session
+            @PathVariable Integer recipeId,
+            HttpSession sess) {
+
         List<Recipe> recipes = (List<Recipe>) sess.getAttribute("listedRecipes");
-        System.out.println("Recipes in session: " + recipes); // Debugging
+        System.out.println("Recipes in session: " + recipes);
 
         if (recipes == null) {
-          String notFoundMessage = "You must be logged in to view recipes in JSON.";
-        
-          JsonObject notFound = Json.createObjectBuilder()
-              .add("message", notFoundMessage)
-              .build();
-        
-          return ResponseEntity
-              .status(HttpStatus.UNAUTHORIZED) // 401 UNAUTHORIZED
-              .body(notFound.toString());
+            String notFoundMessage = "You must be logged in to view recipes in JSON.";
+
+            JsonObject notFound = Json.createObjectBuilder()
+                    .add("message", notFoundMessage)
+                    .build();
+
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(notFound.toString());
         }
-            
-       // Use the recipeId as an Integer
-       Optional<Recipe> savedRecipeOptional = recipeService.extractRecipe(recipes, recipeId);
-       System.out.println("Found recipe: " + savedRecipeOptional);
-       if (!savedRecipeOptional.isPresent()) {
-         String notFoundMessage = String.format("Recipe with recipeID %d not found", recipeId);
-         
-         JsonObject notFound = Json.createObjectBuilder()
-             .add("message", notFoundMessage)
-             .build();
-         
-         return ResponseEntity
-             .status(HttpStatus.NOT_FOUND) // 404 NOT FOUND
-             .body(notFound.toString());
-       }
-       
-       // If recipe found, return it as JSON
-       return ResponseEntity
-           .status(HttpStatus.OK) // 200 OK
-           .body(recipeService.convertRecipeToJson(savedRecipeOptional.get()));
-      }
-            
+
+        Optional<Recipe> savedRecipeOptional = recipeService.extractRecipe(recipes, recipeId);
+        System.out.println("Found recipe: " + savedRecipeOptional);
+        if (!savedRecipeOptional.isPresent()) {
+            String notFoundMessage = String.format("Recipe with recipeID %d not found", recipeId);
+
+            JsonObject notFound = Json.createObjectBuilder()
+                    .add("message", notFoundMessage)
+                    .build();
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(notFound.toString());
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(recipeService.convertRecipeToJson(savedRecipeOptional.get()));
+    }
+
+    @DeleteMapping("/recipes/{savedRecipesId}/{recipeId}")
+    public ResponseEntity<String> deleteRecipe(
+            @PathVariable String savedRecipesId,
+            @PathVariable String recipeId) {
+
+        try {
+            // Call the service method to delete the recipe
+            recipeService.deleteRecipe(savedRecipesId, recipeId);
+            return ResponseEntity.ok("Recipe with ID " + recipeId + " deleted successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting recipe.");
+        }
+    }
 
 }

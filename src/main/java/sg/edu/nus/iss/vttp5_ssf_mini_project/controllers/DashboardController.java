@@ -10,94 +10,91 @@ import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.vttp5_ssf_mini_project.models.User;
-import sg.edu.nus.iss.vttp5_ssf_mini_project.services.RecipeService;
 import sg.edu.nus.iss.vttp5_ssf_mini_project.services.UserService;
+import sg.edu.nus.iss.vttp5_ssf_mini_project.services.RecipeService;
 
 @Controller
 @RequestMapping("/")
 public class DashboardController {
+
     @Autowired
-  private UserService userSvc;
+    private UserService userSvc;
 
-  @Autowired
-  private RecipeService recipeSvc;
+    @Autowired
+    private RecipeService recipeService;
 
-  @GetMapping("/dashboard")
-  public ModelAndView getDashboardPage(HttpSession sess) {
+    @GetMapping("/dashboard")
+    public ModelAndView getDashboardPage(HttpSession sess) {
 
-    ModelAndView mav = new ModelAndView();
+        ModelAndView mav = new ModelAndView();
 
-    if (sess.getAttribute("loggedUser") != null) {
+        if (sess.getAttribute("loggedUser") != null) {
 
-      User loggedUser = (User) sess.getAttribute("loggedUser");
+            User loggedUser = (User) sess.getAttribute("loggedUser");
 
-      mav.addObject("loggedUser", loggedUser);
-      mav.setViewName("dashboard");
+            mav.addObject("loggedUser", loggedUser);
+            mav.setViewName("dashboard");
+        }
+
+        else {
+            mav.setViewName("homepage");
+        }
+
+        return mav;
     }
 
-    else {
+    @GetMapping("/logout")
+    public ModelAndView logoutUser(HttpSession sess) {
 
-      mav.setViewName("homepage");
+        ModelAndView mav = new ModelAndView();
+
+        sess.invalidate();
+
+        mav.setViewName("homepage");
+        return mav;
     }
 
-    return mav;
-  }
+    @GetMapping("/profile/{userID}")
+    public ModelAndView getUserProfile(@PathVariable String userID, HttpSession sess) {
 
-  @GetMapping("/logout")
-  public ModelAndView logoutUser(HttpSession sess) {
+        ModelAndView mav = new ModelAndView();
 
-    ModelAndView mav = new ModelAndView();
+        User loggedUser = (User) sess.getAttribute("loggedUser");
 
-    sess.invalidate();
+        // checks if the user is not logged in
+        if (null == loggedUser) {
 
-    mav.setViewName("homepage");
-    return mav;
-  }
+            mav.addObject("errorMessage", " to view account details.");
+            mav.setViewName("accesserror1");
+            mav.setStatus(HttpStatus.UNAUTHORIZED); // 401 UNAUTHORIZED
+        }
 
-  @GetMapping("/profile/{userID}")
-  public ModelAndView getUserProfile(@PathVariable String userID, HttpSession sess) {
+        // checks if the requested user ID does not exist in the database
+        else if (!userSvc.hasUserIDKey(userID)) {
 
-    ModelAndView mav = new ModelAndView();
+            mav.addObject("errorMessage", "UserID %s is not found.".formatted(userID));
+            mav.setViewName("accesserror2");
+            mav.setStatus(HttpStatus.NOT_FOUND); // 404 NOT FOUND
+        }
 
-    User loggedUser = (User) sess.getAttribute("loggedUser");
+        // checks if the requested user ID is the same as the logged user ID (prevent user from viewing other profiles)
+        else if (!userID.equals(loggedUser.getUserID())) {
 
-    // checks if the user is not logged in
-    if (null == loggedUser) {
+            mav.addObject("errorMessage", "Unrestricted access to other account details.");
+            mav.setViewName("accesserror3");
+            mav.setStatus(HttpStatus.UNAUTHORIZED); // 401 UNAUTHORIZED
+        }
 
-      mav.addObject("errorMessage", " to view account details.");
+        // user is logged in and the requested user ID exists
+        else {
 
-      mav.setViewName("accesserror1");
-      mav.setStatus(HttpStatus.UNAUTHORIZED); // 401 UNAUTHORIZED
+            mav.addObject("loggedUser", loggedUser);
+            mav.addObject("favourites", recipeService.getFavouritesQuantity(userID));
+
+            mav.setViewName("userprofile");
+            mav.setStatus(HttpStatus.OK); // 200 OK
+        }
+
+        return mav;
     }
-
-    // checks if the requested user ID does not exist in the database
-    else if (!userSvc.hasUserIDKey(userID)) {
-
-      mav.addObject("errorMessage", "UserID %s is not found.".formatted(userID));
-
-      mav.setViewName("accesserror2");
-      mav.setStatus(HttpStatus.NOT_FOUND); // 404 NOT FOUND
-    }
-
-    // checks if the requested user ID is the same as the logged user ID (prevent user from viewing other profiles)
-    else if (!userID.equals(loggedUser.getUserID())) {
-
-      mav.addObject("errorMessage", "Unrestricted access to other account details.");
-
-      mav.setViewName("accesserror3");
-      mav.setStatus(HttpStatus.UNAUTHORIZED); // 401 UNAUTHORIZED
-    }
-
-    // user is logged in and the requested user ID exists
-    else {
-
-      mav.addObject("loggedUser", loggedUser);
-    //   mav.addObject("bookmarks", recipeSvc.getBookmarksQuantity(userID));
-
-      mav.setViewName("userprofile");
-      mav.setStatus(HttpStatus.OK); // 200 OK
-    }
-
-    return mav;
-  }
 }

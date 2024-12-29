@@ -10,7 +10,6 @@ public class Utility {
     
     // for password validation
     public static final String PASSWORD_SPECIAL_CHARS = "@#$%^`<>&+=\"!ºª·#~%&'¿¡€,:;*/+-.=_\\[\\]\\(\\)\\|\\_\\?\\\\";
-
     public static final int PASSWORD_MIN_SIZE = 10;
 
     public static final String PASSWORD_VALIDATION_MESSAGE = new StringBuilder("Password Requirements:\n")
@@ -87,6 +86,7 @@ public class Utility {
         "whole30"
     };
 
+    // Converts a string into PascalCase format
     public static final String getPascalCase(final String words) {
         return Stream.of(words.trim().split("\\s"))
                 .filter(word -> !word.isEmpty())
@@ -94,5 +94,4 @@ public class Utility {
                 .collect(Collectors.joining(" "))
                 .trim();
     }
-
 }

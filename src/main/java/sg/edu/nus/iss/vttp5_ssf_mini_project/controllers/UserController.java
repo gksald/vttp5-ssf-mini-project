@@ -19,229 +19,135 @@ import sg.edu.nus.iss.vttp5_ssf_mini_project.services.UserService;
 @Controller
 @RequestMapping("/")
 public class UserController {
-    
+
     @Autowired
     private UserService userService;
 
-    // @Autowired
-  // private ApplicationMetrics appMetrics;
+    @GetMapping({ "/", "/homepage"})
+    public ModelAndView getHomePage(HttpSession sess) {
 
-  @GetMapping({ "/", "/homepage", "/index.html" })
-  public ModelAndView getHomePage(HttpSession sess) {
+        ModelAndView mav = new ModelAndView();
 
-    ModelAndView mav = new ModelAndView();
+        if (sess.getAttribute("loggedUser") == null) {
 
-    if (sess.getAttribute("loggedUser") == null) {
+            mav.setViewName("homepage");
+        } else {
 
-      mav.setViewName("homepage");
+            User loggedUser = (User) sess.getAttribute("loggedUser");
+
+            mav.addObject("loggedUser", loggedUser);
+            mav.setViewName("dashboard");
+        }
+
+        return mav;
     }
 
-    else {
+    @GetMapping("/register")
+    public ModelAndView getRegisterUser() {
 
-      User loggedUser = (User) sess.getAttribute("loggedUser");
+        ModelAndView mav = new ModelAndView();
 
-      mav.addObject("loggedUser", loggedUser);
-      mav.setViewName("dashboard");
-    }
-    
-    // // for application metrics
-    // appMetrics.incrementVisits();
+        mav.addObject("user", new User());
 
-    return mav;
-  }
-
-  @GetMapping("/register")
-  public ModelAndView getRegisterUser() {
-
-    ModelAndView mav = new ModelAndView();
-
-    mav.addObject("user", new User());
-
-    mav.setViewName("registeruser");
-    return mav;
-  }
-
-  @PostMapping("/register/post")
-  public ModelAndView postRegisterUser(
-      @Valid @ModelAttribute User user,
-      BindingResult results) {
-
-    ModelAndView mav = new ModelAndView();
-
-    // syntactic validation errors
-    if (results.hasErrors()) {
-
-      mav.setViewName("registeruser");
-      mav.setStatus(HttpStatus.BAD_REQUEST); // 400 BAD REQUEST
-
-      return mav;
+        mav.setViewName("registeruser");
+        return mav;
     }
 
-    // semantic validation error 1 : username already exists in database
-    if (userService.usernameExists(user.getUsername())) {
+    @PostMapping("/register/post")
+    public ModelAndView postRegisterUser(@Valid @ModelAttribute User user, BindingResult results) {
 
-      mav.addObject("usernameExists", true);
+        ModelAndView mav = new ModelAndView();
 
-      mav.setViewName("registeruser");
-      mav.setStatus(HttpStatus.BAD_REQUEST); // 400 BAD REQUEST
+        // syntactic validation errors
+        if (results.hasErrors()) {
 
-      return mav;
+            mav.setViewName("registeruser");
+            mav.setStatus(HttpStatus.BAD_REQUEST); // 400 BAD REQUEST
+
+            return mav;
+        }
+
+        // semantic validation error 1 : username already exists in database
+        if (userService.usernameExists(user.getUsername())) {
+
+            mav.addObject("usernameExists", true);
+
+            mav.setViewName("registeruser");
+            mav.setStatus(HttpStatus.BAD_REQUEST); // 400 BAD REQUEST
+
+            return mav;
+        }
+
+        // semantic validation error 2 : email already exists in database
+        if (userService.emailExists(user.getEmail())) {
+
+            mav.addObject("emailExists", true);
+
+            mav.setViewName("registeruser");
+            mav.setStatus(HttpStatus.BAD_REQUEST); // 400 BAD REQUEST
+
+            return mav;
+        }
+
+        String userID = userService.generateUserID();
+        user.setUserID(userID);
+
+        userService.saveUser(user);
+
+        mav.addObject("successfulRegistration", true);
+
+        mav.setViewName("loginuser");
+        mav.setStatus(HttpStatus.CREATED); // 201 CREATED
+
+        return mav;
     }
 
-    // semantic validation error 2 : email already exists in database
-    if (userService.emailExists(user.getEmail())) {
+    @GetMapping("/login")
+    public ModelAndView getLoginUser() {
 
-      mav.addObject("emailExists", true);
+        ModelAndView mav = new ModelAndView();
 
-      mav.setViewName("registeruser");
-      mav.setStatus(HttpStatus.BAD_REQUEST); // 400 BAD REQUEST
+        mav.addObject("user", new User());
 
-      return mav;
+        mav.setViewName("loginuser");
+        return mav;
     }
 
-    String userID = userService.generateUserID();
-    user.setUserID(userID);
+    @PostMapping("/login/post")
+    public ModelAndView postLoginUser(@ModelAttribute User user, HttpSession sess) {
 
-    userService.saveUser(user);
+        ModelAndView mav = new ModelAndView();
 
-    mav.addObject("successfulRegistration", true);
+        // semantic validation error 1 : username does not exist in DB
+        if (!userService.usernameExists(user.getUsername())) {
 
-    // // for application metrics
-    // appMetrics.incrementRegistrations();
+            mav.addObject("usernameNotFound", true);
 
-    mav.setViewName("loginuser");
-    mav.setStatus(HttpStatus.CREATED); // 201 CREATED
+            mav.setViewName("loginuser");
+            mav.setStatus(HttpStatusCode.valueOf(400));
 
-    return mav;
-  }
+            return mav;
+        }
 
-  @GetMapping("/login")
-  public ModelAndView getLoginUser() {
+        // semantic validation error 2 : password does not match correct username
+        if (!userService.isCorrectMatch(user.getUsername(), user.getPassword())) {
 
-    ModelAndView mav = new ModelAndView();
+            mav.addObject("incorrectPassword", true);
 
-    mav.addObject("user", new User());
+            mav.setViewName("loginuser");
+            mav.setStatus(HttpStatusCode.valueOf(400));
 
-    mav.setViewName("loginuser");
-    return mav;
-  }
+            return mav;
+        }
 
-  @PostMapping("/login/post")
-  public ModelAndView postLoginUser(
-      @ModelAttribute User user, HttpSession sess) {
+        User loggedUser = userService.loadUser(user.getUsername());
+        sess.setAttribute("loggedUser", loggedUser);
 
-    ModelAndView mav = new ModelAndView();
+        mav.addObject("loggedUser", loggedUser);
 
-    // semantic validation error 1 : username does not exist in DB
-    if (!userService.usernameExists(user.getUsername())) {
+        mav.setViewName("dashboard");
+        mav.setStatus(HttpStatusCode.valueOf(200));
 
-      mav.addObject("usernameNotFound", true);
-
-      mav.setViewName("loginuser");
-      mav.setStatus(HttpStatusCode.valueOf(400));
-
-      return mav;
+        return mav;
     }
-
-    // semantic validation error 2 : password does not match correct username
-    if (!userService.isCorrectMatch(user.getUsername(), user.getPassword())) {
-
-      mav.addObject("incorrectPassword", true);
-
-      mav.setViewName("loginuser");
-      mav.setStatus(HttpStatusCode.valueOf(400));
-
-      return mav;
-
-    }
-
-    User loggedUser = userService.loadUser(user.getUsername());
-    sess.setAttribute("loggedUser", loggedUser);
-
-    mav.addObject("loggedUser", loggedUser);
-
-    mav.setViewName("dashboard");
-    mav.setStatus(HttpStatusCode.valueOf(200));
-
-    return mav;
-  }
-
-    // // this block KIV:
-    // @Autowired
-    // MapRepo mapRepo;
-
-    // @Autowired
-    // RedisTemplate<String, Object> redisTemplate;
-
-    // @GetMapping("/register")
-    // public String showRegistrationForm(Model model) {
-    //     model.addAttribute("user", new User());
-    //     return "register"; // Render the "register.html" Thymeleaf template
-    // }
-
-    // @PostMapping("/register")
-    // public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
-    //     // Check for validation errors
-    //     if (bindingResult.hasErrors()) {
-    //         return "register";
-    //     }
-
-    //     // Check if the username is already taken
-    //     if (!userService.isUsernameUnique(user.getUsername())) {
-    //         model.addAttribute("usernameError", "Username is already taken. Please choose another one.");
-    //         return "register";
-    //     }
-
-    //     // Check if the email is already taken
-    //     if (!userService.isEmailUnique(user.getEmail())) {
-    //         model.addAttribute("emailError", "Email is already taken. Please choose another one.");
-    //         return "register";
-    //     }
-
-    //     // Generate a random ID for the user
-    //     if (user.getId() == null) {
-    //         user.setId((int) (Math.random() * 100000)); // Generate a random 5-digit ID
-    //     }
-
-    //     // serialise to JsonObject, then save the Jsonobject as a string using Map
-    //     JsonObject jObject = Json.createObjectBuilder()
-    //     .add("id", user.getId().toString())
-    //     .add("username", user.getUsername())
-    //     .add("password", user.getPassword())
-    //     .add("email", user.getEmail())
-    //     .build();
-
-    //     // Save the user object to Redis
-    //     mapRepo.saveEntry(Constants.userKey, user.getId().toString(), jObject.toString());
-
-    //     // Add success message to the model
-    //     model.addAttribute("successMessage", "Account created successfully!");
-    //     return "register"; // Redirect to register page
-        
-    // }
-    
-    // @GetMapping("/list")
-    // public String userList(Model model) throws ParseException {
-    //     // Fetch all user entries from Redis
-    //     Map<Object, Object> usersObject = mapRepo.getEntries(Constants.userKey);
-
-    //     List<User> users = new ArrayList<>();
-
-    //     if(usersObject!=null) {
-            
-    //         for(Map.Entry<Object, Object> entry: usersObject.entrySet()) {
-    //             String stringValue = entry.getValue().toString();
-    //             try(JsonReader jReader = Json.createReader(new StringReader(stringValue))) {
-    //                 JsonObject jObject = jReader.readObject();
-    //                 users.add(new User(Integer.parseInt(jObject.getString("id")), jObject.getString("username"), jObject.getString("password"), jObject.getString("email")));
-    //             } catch (Exception e) {
-    //                 // Handle JSON parsing errors
-    //                 System.err.println("Failed to parse user data: " + e.getMessage());
-    //             }
-    //         }
-    //     }
-
-    //     model.addAttribute("users", users);
-    //     return "userlist";
-    // }
 }

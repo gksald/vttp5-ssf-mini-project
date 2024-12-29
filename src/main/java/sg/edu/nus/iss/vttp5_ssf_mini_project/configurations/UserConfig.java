@@ -17,77 +17,57 @@ import sg.edu.nus.iss.vttp5_ssf_mini_project.utilities.Utility;
 @Configuration
 public class UserConfig {
     
-    // Created for logging purposes in this AppConfig class
-  private Logger logger = Logger.getLogger(UserConfig.class.getName());
+    private static final Logger logger = Logger.getLogger(UserConfig.class.getName());
 
-  // Values of properties are injected from resources/application.properties into the configuration
+    @Value("${spring.data.redis.host}")
+    private String redisHost;
 
-  // Railway: SPRING_REDIS_HOST
-  @Value("${spring.data.redis.host}")
-  private String redisHost;
+    @Value("${spring.data.redis.port}")
+    private Integer redisPort;
 
-  // Railway: SPRING_REDIS_PORT
-  @Value("${spring.data.redis.port}")
-  private Integer redisPort;
+    @Value("${spring.data.redis.username}")
+    private String redisUsername;
 
-  // Railway: SPRING_REDIS_USERNAME
-  @Value("${spring.data.redis.username}")
-  private String redisUsername;
+    @Value("${spring.data.redis.password}")
+    private String redisPassword;
 
-  // Railway: SPRING_REDIS_PASSWORD
-  @Value("${spring.data.redis.password}")
-  private String redisPassword;
+    @Value("${spring.data.redis.database}")
+    private Integer redisDatabase;
 
-  // Railway: SPRING_REDIS_DATABASE
-  @Value("${spring.data.redis.database}")
-  private Integer redisDatabase;
+    @Bean(Utility.BEAN_REDIS)
+    public RedisTemplate<String, String> createRedisConnection() {
 
-  // This method is annotated with @Bean, indicating that it produces a bean that can be managed by the Spring container.
-  @Bean(Utility.BEAN_REDIS)
-  public RedisTemplate<String, String> createRedisConnection() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
 
-    // Create a redis configuration
-    RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(redisHost);
+        config.setPort(redisPort);
+        config.setDatabase(redisDatabase);
 
-    // Configuration values are injected from application.properties file
-    config.setHostName(redisHost);
-    config.setPort(redisPort);
-    config.setDatabase(redisDatabase);
+        // Only set the username and password if they are not null and not empty
+        if (redisUsername != null && !redisUsername.isEmpty()) {
+            config.setUsername(redisUsername);
+        }
+        if (redisPassword != null && !redisPassword.isEmpty()) {
+            config.setPassword(redisPassword);
+        }
 
-    // Only set the username and password if they are not null and not empty
-    if (redisUsername != null && !redisUsername.isEmpty()) {
-      config.setUsername(redisUsername);
+        // Logging statements about Redis config
+        logger.log(Level.INFO, "Using Redis database %d".formatted(redisDatabase));
+        logger.log(Level.INFO, "Using Redis username is set: %b".formatted(redisUsername != null && !redisUsername.isEmpty()));
+        logger.log(Level.INFO, "Using Redis password is set: %b".formatted(redisPassword != null && !redisPassword.isEmpty()));
+
+        JedisClientConfiguration jedisClient = JedisClientConfiguration.builder().build();
+        JedisConnectionFactory jedisFac = new JedisConnectionFactory(config, jedisClient);
+        jedisFac.afterPropertiesSet();
+
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(jedisFac);
+
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+
+        return template;
     }
-    if (redisPassword != null && !redisPassword.isEmpty()) {
-      config.setPassword(redisPassword);
-    }
-
-    // Logging statements are used to log information about the Redis configuration
-    logger.log(Level.INFO,
-        "Using Redis database %d".formatted(redisDatabase));
-    logger.log(Level.INFO,
-        "Using Redis username is set: %b".formatted(redisUsername != null && !redisUsername.isEmpty()));
-    logger.log(Level.INFO,
-        "Using Redis password is set: %b".formatted(redisPassword != null && !redisPassword.isEmpty()));
-
-    // Create the client and factory
-    JedisClientConfiguration jedisClient = JedisClientConfiguration.builder().build();
-    JedisConnectionFactory jedisFac = new JedisConnectionFactory(config, jedisClient);
-    jedisFac.afterPropertiesSet();
-
-    // Create the template with the client
-    RedisTemplate<String, String> template = new RedisTemplate<>();
-    template.setConnectionFactory(jedisFac);
-
-    // Keys => set in UTF-8
-    // Values => optional value serializer if string values are to be saved as UTF-8
-    template.setKeySerializer(new StringRedisSerializer());
-    template.setValueSerializer(new StringRedisSerializer());
-    template.setHashKeySerializer(new StringRedisSerializer());
-    template.setHashValueSerializer(new StringRedisSerializer());
-
-    // Return RedisTemplate bean
-    return template;
-  }
-
 }

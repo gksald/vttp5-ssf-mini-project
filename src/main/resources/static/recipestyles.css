@@ -1,8 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
-/* 
- * top bar (essential for all views)
- */
+
+/* top bar (essential for all views) */
 
 .navi .btnOverall {
   color: antiquewhite;
@@ -37,9 +36,8 @@
   margin-left: 40px;
 }
 
-/*
- * error boxes
- */
+
+ /* * error boxes */
 
 .error-box {
   position: relative;
@@ -53,22 +51,22 @@
   margin: 0 auto;
 }
 
-/* Style for the return-box */
+/* return-box */
 .custom-alert {
-  background-color: #a67a50; /* Button background */
-  color: #ffffff; /* Text color */
-  text-align: center; /* Ensure text is centered */
-  font-size: 0.95rem; /* Adjust font size */
-  padding: 10px; /* Spacing inside the button */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
-  transition: transform 0.5s, background-color 0.2s; /* Smooth rotation and hover effect */
+  background-color: #a67a50;
+  color: #ffffff;
+  text-align: center;
+  font-size: 0.95rem;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s, background-color 0.2s;
 }
 
-/* Hover effect for rotation and background change */
+/* hover effect */
 .custom-alert:hover {
-  background-color: #8c6239; /* Change background to a darker shade */
-  color: #ffffff; /* Keep text readable */
-  cursor: pointer; /* Show pointer on hover */
+  background-color: #8c6239;
+  color: #ffffff;
+  cursor: pointer;
 }
 
 .text-lightyellow {

@@ -86,29 +86,5 @@ public class RecipeSearch {
     public void setAddRecipeInstructions(Boolean addRecipeInstructions) {
         this.addRecipeInstructions = addRecipeInstructions;
     }
-
-    
-    // private String dietaryPreference;  // e.g., "vegetarian", "vegan", etc.
-    // private String healthRequirement;  // e.g., "low-fat", "high-protein", etc.
-    // private List<String> ingredients;  // List of ingredients the user may want to include/exclude
-    
-    // public String getDietaryPreference() {
-    //     return dietaryPreference;
-    // }
-    // public void setDietaryPreference(String dietaryPreference) {
-    //     this.dietaryPreference = dietaryPreference;
-    // }
-    // public String getHealthRequirement() {
-    //     return healthRequirement;
-    // }
-    // public void setHealthRequirement(String healthRequirement) {
-    //     this.healthRequirement = healthRequirement;
-    // }
-    // public List<String> getIngredients() {
-    //     return ingredients;
-    // }
-    // public void setIngredients(List<String> ingredients) {
-    //     this.ingredients = ingredients;
-    // }
-    
+   
 }

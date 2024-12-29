@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,31 +25,15 @@ import sg.edu.nus.iss.vttp5_ssf_mini_project.utilities.Utility;
 @Controller
 @RequestMapping("")
 public class RecipeController {
-    
+
     @Value("${spoonacular.api.key}")
     String apiKey; // Replace with your actual API key or fetch from a secure location
-    
+
     @Autowired
     private RecipeService recipeService;
 
     @Autowired
     private RecipeRepository recipeRepo;
-
-    @Autowired
-    private Utility utility;
-
-    // @GetMapping("/search")
-    // public String searchForm(Model model) {
-    //     model.addAttribute("searchRequest", new RecipeRequest());
-    //     return "search";
-    // }
-
-    // @PostMapping("/results")
-    // public String searchResults(@ModelAttribute RecipeRequest searchRequest, Model model) {
-    //     List<RecipeResult> recipes = recipeService.searchRecipes(searchRequest);
-    //     model.addAttribute("recipes", recipes);
-    //     return "results";
-    // }
 
     @GetMapping("/recipesearch")
     public ModelAndView showRecipeSearchPage() {
@@ -105,46 +88,8 @@ public class RecipeController {
         mav.addObject("servingOptions", List.of(1, 2, 3, 4, 5, 6, 7, 8));
 
         return mav;
-        
-
     }
 
-
-    // @PostMapping("/recipesave/{recipeId}")
-    // public ModelAndView getSaveRecipe(@PathVariable Integer recipeId, HttpSession sess) {
-
-    //     ModelAndView mav = new ModelAndView();
-
-    //     User loggedUser = (User) sess.getAttribute("loggedUser");
-    //     if (null == loggedUser) {
-
-    //         mav.addObject("errorMessage", "Please log in to save recipes.");
-
-    //         mav.setViewName("accesserror1");
-    //         mav.setStatus(HttpStatus.UNAUTHORIZED); // 401 UNAUTHORIZED
-    //     }
-
-    //     else {
-
-    //         String userID = loggedUser.getUserID();
-    //         String savedRecipesId = recipeService.createSavedRecipesId(userID);
-
-    //         List<Recipe> recipes = (List<Recipe>) sess.getAttribute("recipes");
-    //         Recipe savedRecipe = recipeService.extractRecipe(recipes, recipeId).get();
-    //         recipeRepo.saveRecipe(savedRecipesId, savedRecipe);
-
-    //         List<Recipe> savedRecipes = recipeService.loadRecipeList(savedRecipesId);
-    //         sess.setAttribute("listedRecipes", savedRecipes);
-
-    //         mav.addObject("recipes", savedRecipes);
-    //         mav.addObject("loggedUser", loggedUser);
-
-    //         mav.setViewName("recipesave");
-    //         mav.setStatus(HttpStatus.CREATED); // 201 CREATED
-    //     }
-
-    //     return mav;
-    // }
     @PostMapping("/recipesave/{recipeId}")
     public ModelAndView getSaveRecipe(@PathVariable Integer recipeId, HttpSession sess) {
         ModelAndView mav = new ModelAndView();
@@ -157,7 +102,7 @@ public class RecipeController {
             mav.addObject("errorMessage", "Please log in to save recipes.");
             mav.setViewName("accesserror1");
             mav.setStatus(HttpStatus.UNAUTHORIZED);  // 401 UNAUTHORIZED
-            
+
         } else {
             // User is logged in, proceed with saving the recipe
             String userID = loggedUser.getUserID();
@@ -204,9 +149,7 @@ public class RecipeController {
         }
 
         return mav;
-        
     }
-
 
     @GetMapping("/recipesave")
     public ModelAndView getFavourites(HttpSession sess) {
@@ -217,7 +160,6 @@ public class RecipeController {
         if (null == loggedUser) {
 
             mav.addObject("errorMessage", "Please log in to view your Cookbook.");
-
             mav.setViewName("accesserror1");
             mav.setStatus(HttpStatus.UNAUTHORIZED); // 401 UNAUTHORIZED
         }
@@ -236,112 +178,8 @@ public class RecipeController {
             mav.setViewName("recipesave");
             mav.setStatus(HttpStatus.OK); // 200 OK
         }
-        
-            return mav;
+
+        return mav;
     }
-
-
-
-
-
-// gpt code for saving.
-     // // Save recipe endpoint
-    // // @PostMapping("/saveRecipe")
-    // // public String saveRecipe(@RequestParam Integer recipeId, HttpSession session) {
-    // //     String userID = (String) session.getAttribute("userID");  // Assuming userID is stored in session
-    // //     Recipe recipe = recipeService.getRecipeById(recipeId);  // Fetch the recipe details
-    // //     recipeRepository.saveRecipe(userID, recipe);
-    // //     return "redirect:/recipelist";
-    // // }
-    // // Endpoint to save a recipe for a user
-    // @PostMapping("/save/{userID}")
-    // public void saveRecipe(@PathVariable String userID, @RequestBody Recipe recipe) {
-    //     recipeService.saveRecipe(userID, recipe);
-    // }
-
-    // // Endpoint to retrieve all recipes saved by a user
-    // @GetMapping("/user/{userID}")
-    // public List<Recipe> getUserRecipes(@PathVariable String userID) {
-    //     return recipeService.getUserRecipes(userID);
-    // }
-
-
-    // // this block KIV
-    // @GetMapping("/recipes")
-    // public String getRecipes(
-    //     @RequestParam(required = false) String query,
-    //     @RequestParam(required = false) String type,
-    //     @RequestParam(required = false) String cuisine,
-    //     @RequestParam(required = false) String diet,
-    //     @RequestParam(required = false) Integer minServings,
-    //     @RequestParam(required = false) Integer maxServings,
-    //     @RequestParam(required = false) String includeIngredients,
-    //     @RequestParam(required = false) String excludeIngredients,
-    //     Model model
-    // ) {
-    //     String apiKey = ""; // Replace with your actual API key
-    //     List<Recipe> recipes = recipeService.getRecipes(apiKey, query, type, cuisine, diet, minServings, maxServings, includeIngredients, excludeIngredients);
-
-    //     // Handle null lists in each recipe
-    //     for (Recipe recipe : recipes) {
-    //         if (recipe.getCuisines() == null) {
-    //             recipe.setCuisines(new ArrayList<>());
-    //         }
-    //         if (recipe.getMealTypes() == null) {
-    //             recipe.setMealTypes(new ArrayList<>());
-    //         }
-    //         if (recipe.getDiets() == null) {
-    //             recipe.setDiets(new ArrayList<>());
-    //         }
-    //     }
-        
-    //     // Add recipes to the model for Thymeleaf
-    //     model.addAttribute("recipes", recipes);
-        
-    //     // Return the Thymeleaf template name (without .html extension)
-    //     return "recipes";
-    // }
-
-//  // OG sample for seaarch
-//     @GetMapping("/searchrecipes")
-//   public ModelAndView getSearchRecipesPage() {
-
-//     ModelAndView mav = new ModelAndView();
-//     mav.addObject("utility", utility);
-
-//     String queryString = "";
-//     mav.addObject("queryString", queryString);
-//     mav.addObject("mealTypes", Utility.MEAL_TYPE);
-//     mav.addObject("dishTypes", Utility.DISH_TYPE);
-//     mav.addObject("cuisineTypes", Utility.CUISINE_TYPE);
-
-//     mav.setViewName("recipesearch");
-//     return mav;
-//   }
-
-//   @GetMapping("/searchrecipes/list")
-//   public ModelAndView getViewRecipesPage(
-//       @RequestParam MultiValueMap<String, String> params,
-//       HttpSession sess) {
-
-//     ModelAndView mav = new ModelAndView();
-
-//     String query = params.getFirst("queryString");
-//     String mealType = params.getFirst("mealType");
-//     String dishType = params.getFirst("dishType");
-//     String cuisineType = params.getFirst("cuisineType");
-
-//     List<Recipe> recipes = recipeService.getRecipes(query, mealType, dishType, cuisineType);
-//     mav.addObject("recipes", recipes);
-
-//     sess.setAttribute("recipes", recipes);
-//     sess.setAttribute("listedRecipes", recipes);
-    
-    // // for application metrics
-    // appMetrics.incrementQueries();
-
-//     mav.setViewName("recipelist");
-//     return mav;
-//   }
 
 }

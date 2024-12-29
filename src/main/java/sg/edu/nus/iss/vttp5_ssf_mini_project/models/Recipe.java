@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Recipe {
 
-    // fields u wanna return as a response
+    // fields to return as a response
     private Integer recipeId;  // link to id
     private String recipeName;   // link to title
     private List<String> ingredients;   // link to extendedIngredients (original)
