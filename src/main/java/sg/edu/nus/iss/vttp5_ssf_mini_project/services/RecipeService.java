@@ -138,7 +138,7 @@ public class RecipeService {
                 .queryParam("fillIngredients", true)
                 .queryParam("addRecipeInformation", true)
                 .queryParam("addRecipeInstructions", true)
-                .queryParam("number", 10);
+                .queryParam("number", 20);
 
         if (query != null && !query.isEmpty()) uriBuilder.queryParam("query", query);
         if (type != null && !type.isEmpty()) uriBuilder.queryParam("type", type);
