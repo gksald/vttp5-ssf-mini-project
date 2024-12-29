@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register User</title>
+
+    <link 
+      href="/userstyles.css" 
+      rel="stylesheet" 
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+
+    <header>
+      <h2 class="logo">
+        <a data-th-href="@{/}">
+          RECIPALS
+        </a>
+      </h2>
+
+      <nav class="navi">
+        <a data-th-href="@{/homepage}">
+          <button class="btnHome">
+            Home
+          </button>
+        </a>
+
+        <a data-th-href="@{/register}">
+          <button class="btnRegister">
+            Sign Up
+          </button>
+        </a>
+
+        <a data-th-href="@{/login}">
+          <button class="btnLogin">
+            Login
+          </button>
+        </a>
+      </nav>
+    </header>
+
+    <div class="wrapper-register">
+      
+      <div class="form-box">
+        <h2>Create an Account</h2>
+
+        <form method="POST" data-th-action="@{/register/post}" data-th-object="${user}">
+
+          <div class="input-box">
+            <span class="icon"><ion-icon name="happy"></ion-icon></span>
+            <input 
+              type="text"
+              name="name"
+              data-th-field="*{name}"
+              required />
+            <label class="register">Name</label>
+          </div>
+
+          <div data-th-if="${#fields.hasErrors('name')}">
+            <div class="validation-box">
+              <span data-th-errors="*{name}"></span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <span class="icon"><ion-icon name="mail"></ion-icon></span>
+            <input 
+              type="email"
+              name="email"
+              data-th-field="*{email}"
+              required />
+            <label class="register">Email Address</label>
+          </div>
+
+          <div data-th-if="${#fields.hasErrors('email')}">
+            <div class="validation-box">
+              <span data-th-errors="*{email}"></span>
+            </div>
+          </div>
+
+          <div data-th-if="${emailExists}">
+            <div class="validation-box">
+                <span>Error: Email already exists.</span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <span class="icon"><ion-icon name="calendar"></ion-icon></span>
+            <input 
+              type="date"
+              name="birthDate"
+              data-th-field="*{birthDate}"
+              required />
+            <label class="register">Date of Birth</label>
+          </div>
+
+          <div data-th-if="${#fields.hasErrors('birthDate')}">
+            <div class="validation-box">
+              <span data-th-errors="*{birthDate}"></span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <span class="icon"><ion-icon name="person-circle"></ion-icon></span>
+            <input 
+              type="text"
+              name="username"
+              data-th-field="*{username}"
+              required />
+            <label class="register">Username</label>
+          </div>
+
+          <div data-th-if="${#fields.hasErrors('username')}">
+            <div class="validation-box">
+              <span data-th-errors="*{username}"></span>
+            </div>
+          </div>
+
+          <div data-th-if="${usernameExists}">
+            <div class="validation-box">
+                <span>Error: Username already exists.</span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+            <input 
+              type="password"
+              name="password"
+              data-th-field="*{password}"
+              required /> 
+            <label class="register">Password</label>
+          </div>
+
+          <div data-th-if="${#fields.hasErrors('password')}">
+            <div class="validation-box">
+              <span data-th-errors="*{password}"></span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">
+            Sign Up
+          </button>
+
+          <div class="login-register">
+            <p>
+                Already have an account?
+                <p>
+                  <a data-th-href="@{/login}" class="register-link">
+                    Login Here!
+                  </a>
+                </p>
+            </p>
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="password-requirements">
+        <h3>Password Requirements:</h3>
+        <p>
+          - At least 10 characters long.<br>
+          - Contains at least one digit.<br>
+          - Contains at least one lower case letter.<br>
+          - Contains at least one upper case letter.<br>
+          - Contains at least one special character.<br>
+          - Does not contain any whitespaces, tabs, etc.
+        </p>
+      </div>
+
+    </div>
+
+    <script 
+      type="module" 
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
+    </script>
+
+    <script 
+      nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous">
+    </script>
+
+  </body>
+
+</html>

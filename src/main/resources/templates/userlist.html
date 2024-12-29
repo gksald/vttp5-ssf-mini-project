@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">User List</h1>
+
+        <!-- Display a message if the list is empty -->
+        <div th:if="${users.isEmpty()}">
+            <p class="text-center text-muted">No users found.</p>
+        </div>
+
+        <!-- Table for displaying the user list -->
+        <table class="table table-striped table-bordered mt-3" th:if="${!users.isEmpty()}">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through the list of users -->
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.password}"></td>
+                    <td th:text="${user.email}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Back button to navigate to the homepage or other pages -->
+        <div class="text-center mt-3">
+            <a href="/users/register" class="btn btn-primary">Back to Register</a>
+        </div>
+    </div>
+</body>
+</html>

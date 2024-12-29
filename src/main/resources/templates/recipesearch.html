@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Recipes</title>
+
+    <link 
+      href="/userstyles.css" 
+      rel="stylesheet" 
+    />
+    <link 
+      href="/recipestyles.css" 
+      rel="stylesheet" 
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+
+    <header>
+      <h2 class="logo">
+        <a data-th-href="@{/}">
+          RECIPALS
+        </a>
+      </h2>
+
+      <nav class="navi">
+        <a data-th-href="@{/dashboard}">
+          <button class="btnOverall">
+            Dashboard
+          </button>
+        </a>
+
+        <a data-th-href="@{/recipesearch}">
+          <button class="btnOverall">
+            Search
+          </button>
+        </a>
+    </header> 
+
+    <div class="container">
+
+      <div class="row justify-content-center align-items-center">
+        <div class="col-md-8">
+          <div class="card text-bg-dark mb-3">
+            <div class="card-body">
+              
+              <h1 class="profile-heading text-center text-lightyellow">
+                <span><ion-icon name="search-outline"></ion-icon></span>
+                Recipe Search
+              </h1>
+              <p class="fs-4 text-center">
+                Find your dream recipes with our highly customisable search filters!
+              </p>
+              <br />
+
+              <form action="/recipelist" method="post">
+
+                <!-- Search Query -->
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0 text-lightyellow">
+                      <span><ion-icon name="search-circle"></ion-icon></span>
+                      Search Query
+                    </h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <input
+                      class="text-bg-dark"
+                      type="text"
+                      id="query"
+                      name="query" 
+                      style="border-color: #fff; color: #000; background-color: #333; width: 100%;"/>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- Include Ingredients -->
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0 text-lightyellow">
+                      <span><ion-icon name="search-circle"></ion-icon></span>
+                      Include Ingredients
+                    </h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <input
+                      class="text-bg-dark"
+                      type="text"
+                      id="includeIngredients"
+                      name="includeIngredients"
+                      style="border-color: #fff; color: #000; background-color: #333; width: 100%;"/>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- Exclude Ingredients -->
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0 text-lightyellow">
+                      <span><ion-icon name="search-circle"></ion-icon></span>
+                      Exclude Ingredients
+                    </h5>
+                  </div>
+                  <div class="col-sm-9">
+                    <input
+                      class="text-bg-dark"
+                      type="text"
+                      id="excludeIngredients"
+                      name="excludeIngredients"
+                      style="border-color: #fff; color: #000; background-color: #333; width: 100%;"/>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- Servings Select -->
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0 text-lightyellow">
+                      <span><ion-icon name="caret-down-circle"></ion-icon></span>
+                      Servings
+                    </h5>
+                  </div>
+                  <div class="col-sm-9 text-lightyellow">
+                    <label for="minServings" class="form-label">Minimum Servings</label>
+                    <select id="minServings" name="minServings" class="form-select text-bg-dark">
+                        <option value="">--Select--</option>
+                        <th:block th:each="serving : ${servingOptions}">
+                            <option th:value="${serving}" th:text="${serving}"></option>
+                        </th:block>
+                    </select>
+                    <label for="maxServings" class="form-label">Maximum Servings</label>
+                    <select id="maxServings" name="maxServings" class="form-select text-bg-dark">
+                        <option value="">--Select--</option>
+                        <th:block th:each="serving : ${servingOptions}">
+                            <option th:value="${serving}" th:text="${serving}"></option>
+                        </th:block>
+                    </select>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- Meal Type Dropdown -->
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0 text-lightyellow">
+                      <span><ion-icon name="caret-down-circle"></ion-icon></span>
+                      Meal Types
+                    </h5>
+                  </div>
+                  <div class="col-sm-9 text-warning">
+                    <select id="type" name="type" multiple class="form-select text-bg-dark">
+                        <th:block th:each="type : ${dishTypes}">
+                            <option th:value="${type}" th:text="${type}"></option>
+                        </th:block>
+                    </select>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- Cuisine Type Dropdown -->
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0 text-lightyellow">
+                      <span><ion-icon name="caret-down-circle"></ion-icon></span>
+                      Cuisine Types
+                    </h5>
+                  </div>
+                  <div class="col-sm-9 text-warning">
+                    <select id="cuisine" name="cuisine" multiple class="form-select text-bg-dark">
+                        <th:block th:each="cuisine : ${cuisineTypes}">
+                            <option th:value="${cuisine}" th:text="${cuisine}"></option>
+                        </th:block>
+                    </select>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- Diet Type Dropdown -->
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="mb-0 text-lightyellow">
+                      <span><ion-icon name="caret-down-circle"></ion-icon></span>
+                      Diet Types
+                    </h5>
+                  </div>
+                  <div class="col-sm-9 text-warning">
+                    <select id="diet" name="diet" multiple class="form-select text-bg-dark">
+                        <th:block th:each="diet : ${dietTypes}">
+                            <option th:value="${diet}" th:text="${diet}"></option>
+                        </th:block>
+                    </select>
+                  </div>
+                </div>
+                <hr>
+
+                <!-- Submit and Back Buttons -->
+                <div class="row">
+                  <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary" style="background-color: steelblue;">LET ME COOK</button>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <a class="btn btn-info text-bg-dark" data-th-href="@{/dashboard}">Back to Dashboard</a>
+                  </div>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <script 
+      type="module" 
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js">
+    </script>
+
+    <script 
+      nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js">
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous">
+    </script>
+
+    <script
+      src="/datescript.js">
+    </script>
+
+  </body>
+
+</html>

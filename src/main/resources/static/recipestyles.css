@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+/* 
+ * top bar (essential for all views)
+ */
+
+.navi .btnOverall {
+  color: antiquewhite;
+  font-size: 1em;
+  font-weight: 500;
+  width: 130px;
+  height: 50px;
+  background: transparent;
+  outline: none;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 40px;
+  transition: 0.5s;
+}
+
+.navi .btnOverall:hover {
+  background: antiquewhite;
+  color: #101f2a;
+}
+
+.navi .btnLogout {
+  color: antiquewhite;
+  font-size: 1.1em;
+  font-weight: 500;
+  width: 130px;
+  height: 50px;
+  outline: none;
+  border: 2px solid #730b0b;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 40px;
+}
+
+/*
+ * error boxes
+ */
+
+.error-box {
+  position: relative;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
+.return-box {
+  position: relative;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+/* Style for the return-box */
+.custom-alert {
+  background-color: #a67a50; /* Button background */
+  color: #ffffff; /* Text color */
+  text-align: center; /* Ensure text is centered */
+  font-size: 0.95rem; /* Adjust font size */
+  padding: 10px; /* Spacing inside the button */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  transition: transform 0.5s, background-color 0.2s; /* Smooth rotation and hover effect */
+}
+
+/* Hover effect for rotation and background change */
+.custom-alert:hover {
+  background-color: #8c6239; /* Change background to a darker shade */
+  color: #ffffff; /* Keep text readable */
+  cursor: pointer; /* Show pointer on hover */
+}
+
+.text-lightyellow {
+  color: lightgoldenrodyellow !important;
+}
+

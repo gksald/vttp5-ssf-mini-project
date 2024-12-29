@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe List</title>
+
+  <link href="/userstyles.css" rel="stylesheet" />
+  <link href="/recipestyles.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+</head>
+
+<body class="text-bg-dark">
+
+  <header>
+    <h2 class="logo text-warning">
+      <a data-th-href="@{/}">
+        RECIPALS
+      </a>
+    </h2>
+
+    <nav class="navi">
+      <a data-th-href="@{/dashboard}">
+        <button class="btnOverall btn btn-primary">
+          Dashboard
+        </button>
+      </a>
+
+      <a data-th-href="@{/recipesearch}">
+        <button class="btnOverall btn btn-primary">
+          Search
+        </button>
+      </a>
+    </nav>
+  </header>
+
+  <div class="container mt-4">
+    <!-- Success Message -->
+    <th:block th:if="${param.success}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        Recipe successfully saved to your cookbook!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </th:block>
+    
+    <h1 class="text-center text-white">
+        <ion-icon name="restaurant-outline" size="large"></ion-icon>
+        <ion-icon name="restaurant-outline" size="large"></ion-icon>
+        <ion-icon name="restaurant-outline" size="large"></ion-icon>
+    </h1>
+    <div>
+      <th:block th:if="${recipes != null and !#lists.isEmpty(recipes)}">
+        <th:block th:each="recipe : ${recipes}" class="recipe">
+          <div class="card mb-4 bg-dark text-light">
+            <div class="card-body">
+              <h2 th:text="${recipe.recipeName}" class="text-lightyellow">Recipe Name</h2>
+              <p><b>Servings:</b> <span th:text="${recipe.servings}"></span></p>
+              <p><b>Preparation Time:</b> <span th:text="${recipe.preparationTime}"></span> minutes</p>
+              <p><b>Cuisines:</b> <span th:each="cuisine : ${recipe.cuisines}" th:text="${cuisine + ' | '}"></span></p>
+              <p><b>Meal Types:</b> <span th:each="type : ${recipe.mealTypes}" th:text="${type + ' | '}"></span></p>
+              <p><b>Diets:</b> <span th:each="diet : ${recipe.diets}" th:text="${diet + ' | '}"></span></p>
+
+              <img th:src="${recipe.imageUrl}" alt="Recipe Image" class="img-fluid mb-3" />
+
+              <h3>Ingredients:</h3>
+              <ul>
+                <li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient}">Ingredient</li>
+              </ul>
+
+              <h3>Instructions:</h3>
+              <ol>
+                <li th:each="instruction : ${recipe.instructions}" th:text="${instruction}">Instruction</li>
+              </ol>
+
+              <p><a th:href="${recipe.sourceUrl}" target="_blank" class="btn btn-info text-bg-dark">View Full Recipe</a></p>
+
+            
+              <form th:action="@{/recipesave/{recipeId}(recipeId=${recipe.recipeId})}" method="post">
+                <button type="submit" class="btn btn-info text-dark d-flex align-items-center justify-content-center" style="background-color: lightgoldenrodyellow; font-weight: bold;">
+                  <ion-icon name="bookmark-outline" class="me-2"></ion-icon> Save Recipe
+                </button>
+              </form>
+
+
+            </div>
+          </div>
+        </th:block>
+      </th:block>
+
+    <th:block th:unless="${recipes != null and !#lists.isEmpty(recipes)}">
+        <p class="text-center text-white" style="font-size: 1.5rem; font-weight: bold;">No recipes found. Try widening search filters for more results!</p>
+        <nav class="navi" style="display: flex; justify-content: center; margin-top: 20px;">
+            <a data-th-href="@{/recipesearch}">
+            <button class="btnOverall">
+                Search Again
+            </button>
+            </a>
+        </nav>
+    </th:block>
+    </div>
+</div>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+
+</html>

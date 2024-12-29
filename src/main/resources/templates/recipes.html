@@ -1,0 +1,115 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Recipes</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        .recipe { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .recipe img { max-width: 300px; margin-top: 10px; }
+        .search-form { margin-bottom: 20px; }
+        .search-form input, .search-form button { padding: 10px; margin: 5px; font-size: 16px; }
+        .no-results { color: red; font-size: 18px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Recipes</h1>
+
+    Search Form
+    <form action="/recipes" method="get" class="search-form">
+        <input type="text" name="query" placeholder="Search for recipes..." />
+        <input type="text" name="type" placeholder="Meal type (e.g., main course)" />
+        <input type="text" name="cuisine" placeholder="Cuisine (e.g., Italian)" />
+        <input type="text" name="diet" placeholder="Diet (e.g., vegetarian)" />
+        <button type="submit">Search</button>
+    </form>
+
+    Display message if no recipes are found
+    <p th:if="${#lists.isEmpty(recipes)}" class="no-results">No recipes found. Try another search!</p>
+
+    Display recipes
+    <div th:each="recipe : ${recipes}" class="recipe">
+        <h2 th:text="${recipe.recipeName}">Recipe Name</h2>
+        <p><b>Servings:</b> <span th:text="${recipe.servings}">4</span></p>
+        <p><b>Preparation Time:</b> <span th:text="${recipe.preparationTime}">30</span> minutes</p>
+
+        Display Cuisines
+        <p><b>Cuisines:</b>
+            <span th:each="cuisine, iterStat : ${recipe.cuisines}" th:text="${cuisine}" 
+                  th:if="${iterStat.index < recipe.cuisines.size() - 1}" th:append=", "></span>
+            <span th:each="cuisine : ${recipe.cuisines}" th:text="${cuisine}" th:if="${#lists.size(recipe.cuisines) == 1}"></span>
+        </p>
+
+        Display Meal Types
+        <p><b>Meal Types:</b>
+            <span th:each="type, iterStat : ${recipe.mealTypes}" th:text="${type}" 
+                  th:if="${iterStat.index < recipe.mealTypes.size() - 1}" th:append=", "></span>
+            <span th:each="type : ${recipe.mealTypes}" th:text="${type}" th:if="${#lists.size(recipe.mealTypes) == 1}"></span>
+        </p>
+
+        Display Diets
+        <p><b>Diets:</b>
+            <span th:each="diet, iterStat : ${recipe.diets}" th:text="${diet}" 
+                  th:if="${iterStat.index < recipe.diets.size() - 1}" th:append=", "></span>
+            <span th:each="diet : ${recipe.diets}" th:text="${diet}" th:if="${#lists.size(recipe.diets) == 1}"></span>
+        </p>
+        
+        <img th:src="${recipe.imageUrl}" alt="Recipe Image" />
+        
+        <h3>Ingredients:</h3>
+        <ul>
+            <li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient}">Ingredient</li>
+        </ul>
+
+        <h3>Instructions:</h3>
+        <ol>
+            <li th:each="instruction : ${recipe.instructions}" th:text="${instruction}">Instruction</li>
+        </ol>
+
+        <p><a th:href="${recipe.sourceUrl}" target="_blank">View Full Recipe</a></p>
+    </div>
+</body>
+</html> -->
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Recipes</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { color: #333; }
+        .recipe { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .recipe img { max-width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Recipes</h1>
+
+    Display recipes
+    <div th:each="recipe : ${recipes}" class="recipe">
+        <h2 th:text="${recipe.recipeName}">Recipe Name</h2>
+        <p><b>Servings:</b> <span th:text="${recipe.servings}"></span></p>
+        <p><b>Preparation Time:</b> <span th:text="${recipe.preparationTime}"></span> minutes</p>
+        <p><b>Cuisines:</b> <span th:each="cuisine : ${recipe.cuisines}" th:text="${cuisine+','}"></span></p>
+        <p><b>Meal Types:</b> <span th:each="type : ${recipe.mealTypes}" th:text="${type}"></span></p>
+        <p><b>Diets:</b> <span th:each="diet : ${recipe.diets}" th:text="${diet}"></span></p>
+        
+        <img th:src="${recipe.imageUrl}" alt="Recipe Image" />
+        
+        <h3>Ingredients:</h3>
+        <ul>
+            <li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient}">Ingredient</li>
+        </ul>
+
+        <h3>Instructions:</h3>
+        <ol>
+            <li th:each="instruction : ${recipe.instructions}" th:text="${instruction}">Instruction</li>
+        </ol>
+
+        <p><a th:href="${recipe.sourceUrl}" target="_blank">View Full Recipe</a></p>
+    </div>
+</body>
+</html> -->
