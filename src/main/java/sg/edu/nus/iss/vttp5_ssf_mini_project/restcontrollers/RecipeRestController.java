@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,6 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.servlet.http.HttpSession;
 import sg.edu.nus.iss.vttp5_ssf_mini_project.models.Recipe;
-import sg.edu.nus.iss.vttp5_ssf_mini_project.models.RecipeResult;
 import sg.edu.nus.iss.vttp5_ssf_mini_project.services.RecipeService;
 
 @RestController
