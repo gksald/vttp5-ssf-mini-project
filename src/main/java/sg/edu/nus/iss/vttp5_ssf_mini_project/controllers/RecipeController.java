@@ -279,7 +279,7 @@ public class RecipeController {
     //     @RequestParam(required = false) String excludeIngredients,
     //     Model model
     // ) {
-    //     String apiKey = "0980fc8ecdc4489bb3830ae3664e96b7"; // Replace with your actual API key
+    //     String apiKey = ""; // Replace with your actual API key
     //     List<Recipe> recipes = recipeService.getRecipes(apiKey, query, type, cuisine, diet, minServings, maxServings, includeIngredients, excludeIngredients);
 
     //     // Handle null lists in each recipe
