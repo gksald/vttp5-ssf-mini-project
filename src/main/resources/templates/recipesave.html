@@ -46,10 +46,6 @@
     </header> 
 
 
-    <!-- <div class="container text-center">
-      <div class="card text-bg-dark mb-3">
-        <h1 class="profile-heading text-center text-lightyellow">Favourite Recipes</h1>        
-      </div> -->
     <div class="container mt-4">
       <h1 class="text-center text-lightyellow">
         <ion-icon name="book-outline" size="large"></ion-icon> My Cookbook
@@ -58,26 +54,7 @@
       <div class="row justify-content-center align-items-center" data-th-if="${#lists.isEmpty(recipes)}">
         <div class="col-md-7 text-center text-white">
 
-          <!-- <div class="error-box-recipe alert alert-danger text-decoration-none p-3 rounded">
-            <h1>
-              <h2 class="alert-heading">
-                <ion-icon name="alert-circle-outline"></ion-icon>
-                Oops! It seems like you haven't saved any recipes yet.
-              </h2>
-              <p class="fs-5">
-                Get started by checking the recipe search page.
-            </h1>
-          </div>
-
-          <a class="text-decoration-none" data-th-href="@{/recipesearch}">
-            <div class="return-box alert alert-primary text-decoration-none p-3 rounded">
-              <h1>
-                <p class="alert-heading fs-5">
-                  Back to Recipe Search
-                </p>
-              </h1>
-            </div>
-          </a> -->
+        
           <p class="text-center text-white" style="font-size: 1.5rem; font-weight: bold;">No recipes found. Start saving your favorites now!</p>
           <nav class="navi" style="display: flex; justify-content: center; margin-top: 20px;">
             <a data-th-href="@{/recipesearch}">
@@ -103,50 +80,7 @@
               <h5 class="card-title text-lightyellow" data-th-text="${recipe.recipeName}">a</h5>
             </a>
 
-            <!-- <h6 class="card-title text-lightyellow">
-              <ion-icon name="information-circle" size="large"></ion-icon>
-            </h6> -->
             <hr class="my-2"/>
-
-            <!-- <div class="row row-cols-3">
-              <div class="col">
-                <div class="card-text text-light" data-th-text="${recipe.preparationTime} + ' minutes'"></div>
-              </div> -->
-
-              <!-- <div class="col">
-                <div class="card-text text-light" data-th-text="${#arrays.length(recipe.ingredients)}"></div>
-              </div>
-
-            </div> -->
-
-            <!-- <div class="row row-cols-3">
-              <div class="col p-1">
-                <div class="card-text text-light">
-                  <span>minutes</span>
-                </div>
-                <div class="card-text text-light">
-                  <span><ion-icon name="timer"></ion-icon></span>
-                </div>
-                
-              </div>
-              <div class="col p-1">
-                <div class="card-text text-light">
-                  <span>ingredients</span>
-                </div>
-                <div class="card-text text-light">
-                  <span><ion-icon name="restaurant"></ion-icon></span>
-                </div>
-              </div>
-              <div class="col p-1">
-                <div class="card-text text-light">
-                  <span>calories</span>
-                </div>
-                <div class="card-text text-light">
-                  <span><ion-icon name="flame"></ion-icon></span>
-                </div>
-              </div>
-            </div>
-            <hr class="my-2"/> -->
 
             <div class="row row cols-2">
               <div class="col">

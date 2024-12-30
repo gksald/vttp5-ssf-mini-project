@@ -186,10 +186,11 @@
                 <!-- Diet Type Dropdown -->
                 <div class="row">
                   <div class="col-sm-3">
-                    <h5 class="mb-0 text-lightyellow">
-                      <span><ion-icon name="caret-down-circle"></ion-icon></span>
-                      Diet Types
-                    </h5>
+                    <a class="mb-0 text-lightyellow" th:href="@{https://spoonacular.com/food-api/docs#Diets}">
+                      <h5>
+                        <span><ion-icon name="caret-down-circle"></ion-icon></span> Diet Types
+                      </h5>
+                    </a>
                   </div>
                   <div class="col-sm-9 text-warning">
                     <select id="diet" name="diet" multiple class="form-select text-bg-dark">
