@@ -1,6 +1,6 @@
 # VTTP5-SSF-MINI-PROJECT-RECIPAL
 
-## What is RECIPAL
+## What is RECIPAL?
 - RECIPAL is your trusted pal you can rely on to meet all your recipe needs!
 
 ## Key Features:
