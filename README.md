@@ -1,5 +1,8 @@
 # VTTP5-SSF-MINI-PROJECT-RECIPAL
 
+## What is RECIPAL
+- RECIPAL is your trusted pal you can rely on to meet all your recipe needs!
+
 ## Key Features:
 
 - A wide range of search filters that allows you to easily streamline the recipes you love!
@@ -9,7 +12,7 @@
 ## Technologies Used:
 
 - Java
-- Soringboot
+- Springboot
 - Thymeleaf
 - Redis
 - Docker
